@@ -1,16 +1,15 @@
-<?php include "templates/header.php"; ?>
-
 <?php
 if (isset($_POST['submit'])) {
 
     try {
         require_once "../src/DBconnect.php";
+        require "common.php";
         $new_user = array(
-            "firstname" => $_POST['firstname'],
-            "lastname" => $_POST['lastname'],
-            "email" => $_POST['email'],
-            "age" => $_POST['age'],
-            "location" => $_POST['location']
+            "firstname" => clean($_POST['firstname']),
+            "lastname" => clean($_POST['lastname']),
+            "email" => clean($_POST['email']),
+            "age" => clean($_POST['age']),
+            "location" => clean($_POST['location'])
         );
         $sql = sprintf("INSERT INTO %s (%s) values (%s)", "users",
             implode(", ", array_keys($new_user)),
@@ -21,8 +20,13 @@ if (isset($_POST['submit'])) {
         echo $sql . "<br>" . $error->getMessage();
     }
 }
+if (isset($_POST['submit']) && $statement)
+{
+    echo $new_user['firstname']. ' successfully added';
+}
 ?>
 
+<?php require "templates/header.php"; ?>
     <h2>Add a user</h2>
     <form method="post">
         <label for="firstname">First Name</label>
@@ -39,5 +43,5 @@ if (isset($_POST['submit'])) {
     </form>
     <a href="index.php">Back to home</a>
 
-<?php include "templates/footer.php"; ?>
+<?php require "templates/footer.php"; ?>
 
